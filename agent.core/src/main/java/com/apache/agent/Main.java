@@ -1,8 +1,9 @@
 package com.apache.agent;
 
-import com.TestDecode;
+import com.apache.agent.channel.CustomDecode;
 import com.apache.agent.channel.CustomEncode;
 import com.apache.agent.channel.EchoServerHandler;
+import com.apache.agent.protocal.ProtoHandleMap;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,12 +14,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
+		ProtoHandleMap.init();
 		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -28,8 +31,9 @@ public class Main {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ChannelPipeline p = ch.pipeline();
-							p.addLast(new TestDecode());
-							p.addLast(new CustomEncode(100000, 0, 4));
+							p.addLast(new CustomDecode(100000, 0, 4));
+							p.addLast(new CustomEncode());
+							p.addLast(new LengthFieldPrepender(4, true));
 							p.addLast(new EchoServerHandler());
 						}
 					});

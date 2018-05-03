@@ -1,5 +1,6 @@
 package com;
 
+import com.apache.agent.channel.CustomDecode;
 import com.apache.agent.channel.CustomEncode;
 
 import io.netty.bootstrap.Bootstrap;
@@ -11,6 +12,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldPrepender;
 
 public class Main1 {
 
@@ -25,9 +27,9 @@ public class Main1 {
 						@Override
 						public void initChannel(SocketChannel ch) throws Exception {
 							ChannelPipeline p = ch.pipeline();
-
-							p.addLast(new TestDecode());
-							p.addLast(new CustomEncode(100000, 0, 4));
+							p.addLast(new CustomDecode(100000, 0, 4));
+							p.addLast(new CustomEncode());
+							p.addLast(new LengthFieldPrepender(4, true));
 							p.addLast(new EchoClientHandler());
 						}
 					});

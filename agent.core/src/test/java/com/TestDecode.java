@@ -10,7 +10,6 @@ public class TestDecode extends MessageToByteEncoder {
 	protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
 		String body = msg.toString();
 		byte[] bodyBytes = body.getBytes();
-		out.writeInt(bodyBytes.length);
 		out.writeBytes(bodyBytes);
 	}
 
