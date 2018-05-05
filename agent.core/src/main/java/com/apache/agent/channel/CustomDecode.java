@@ -12,11 +12,11 @@ public class CustomDecode extends LengthFieldBasedFrameDecoder {
 
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
-		int length = in.readInt();
-		byte type = in.readByte();
-		ByteBuf buf = in.readBytes(length);
-		byte[] req = new byte[buf.readableBytes()];
-		buf.readBytes(req);
+		ByteBuf bf = (ByteBuf) super.decode(ctx, in);
+		int length = bf.readInt();
+		byte type = bf.readByte();
+		System.out.println("length=" + length + ";type=" + type);
+		byte[] req = new byte[bf.readableBytes()];
 		String body = new String(req, "UTF-8");
 		return body;
 	}

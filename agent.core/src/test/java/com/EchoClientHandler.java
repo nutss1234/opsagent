@@ -8,6 +8,7 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) {
 		System.out.println("start");
+		ctx.write(1);
 		ctx.writeAndFlush("aaaa");
 	}
 
